@@ -6,8 +6,8 @@ import { connectDB } from "./config/db.js";
 
 const httpServer = http.createServer(app);
 
-const io = new Server(httpServer, {
-  cors: { origin: env.clientUrl, credentials: true },
+const io = new Server(httpServer, { //Socket.IO ko existing HTTP server ke saath attach kar diya. - Same server/port.
+  cors: { origin: env.clientUrl, credentials: true }, // Socket.IO connection allow frontend origin - localhost:5173
 });
 
 io.on("connection", (socket) => {
@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const start = async () => {
+const start = async () => { //Server start karne ka main function.
   try {
     await connectDB();
     httpServer.listen(env.port, () => {
