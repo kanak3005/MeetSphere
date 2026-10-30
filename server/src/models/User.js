@@ -3,7 +3,13 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true, minlength: 2, maxlength: 50 },
+    name: 
+    { type: String, 
+      required: true, 
+      trim: true,
+       minlength: 2, 
+       maxlength: 50
+       },
     email: {
       type: String,
       required: true,
@@ -12,17 +18,28 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     // select: false => queries mein password default se nahi aata
-    password: { type: String, required: true, select: false },
-    avatar: { type: String, default: "" },
-  },
-  {
+    password: 
+    { type: String, 
+      required: true, 
+      select: false 
+    },
+    avatar: 
+    { type: String,
+      default: "" },
+   },
+   {
     timestamps: true, // createdAt, updatedAt
-    toJSON: {
+    toJSON: { //toJSON.transform = "Database se aane wale User object ko frontend ko bhejne se pehle clean/modify kar do."
       transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-        delete ret.password; // safety net: kabhi bhi response mein nahi jaayega
+        //doc → original Mongoose document
+        //ret → us document ka JSON/object version
+        ret.id = ret._id;//_id ko id banana {
+    // _id: "abc123",
+   // id: "abc123"
+
+        delete ret._id; // delete _id  - toh bass ye bacha -> id: "abc123"
+        delete ret.__v; // Mongoose internally __v field use kar sakta hai for versioning. but Frontend ko usually iski zarurat nahi hai.
+        delete ret.password; // means JSON response mein jo password field hai.
         return ret;
       },
     },

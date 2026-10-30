@@ -4,7 +4,9 @@ import ApiError from "../utils/ApiError.js";
 
 // Jab email DB mein nahi milta tab bhi ek bcrypt compare chalate hain,
 // taaki response time se attacker ko pata na chale ki email registered hai ya nahi
-const DUMMY_HASH = bcrypt.hashSync("dummy-password-for-timing", 12);
+const DUMMY_HASH = bcrypt.hashSync("dummy-password-for-timing", 12); //Ye kisi actual user's password nahi hai.
+// It's just a dummy hash used for approximately similar bcrypt work when the email doesn't exist.
+//12 bcrypt ka cost factor / salt rounds hai.
 
 export const registerUser = async ({ name, email, password }) => {
   const existing = await User.findOne({ email });
@@ -21,7 +23,7 @@ export const loginUser = async ({ email, password }) => {
 
   const isMatch = user
     ? await user.comparePassword(password)
-    : await bcrypt.compare(password, DUMMY_HASH).then(() => false);
+    : await bcrypt.compare(password, DUMMY_HASH).then(() => false);//Comparison ka result jo bhi ho, hum login ko false hi maanenge.
 
   // Dono cases (email galat / password galat) mein same message
   if (!isMatch) {
